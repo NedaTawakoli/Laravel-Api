@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Resources\AuthorResource;
-use App\Http\Resources\BookResource;
 use Illuminate\Foundation\Http\FormRequest;
 
-class BookInsertRequest extends FormRequest
+class BooKUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,16 +23,15 @@ class BookInsertRequest extends FormRequest
     {
         return [
             //
-            "title"=>"required|string|min:5",
-            "isbn"=>"required|string|unique:isbn",
+            "title"=>"nullable|string|min:5",
+            "isbn"=>"nullable|string|unique:isbn",
             "description"=>"nullable|string",
-            "published_at"=>"required|date",
+            "published_at"=>"nullable|date",
             "total_copies"=>"nullable|integer|max:200",
-            "cover_image"=>"required|string",
-            "price"=>"required|numeric",
-            "author_id"=>"required|exists:author,id",
-            "genre"=>"required|string",
-            "author"=> new AuthorResource($this->whenLoaded('author',))
+            "cover_image"=>"nullable|string",
+            "price"=>"nullable|numeric",
+            "author_id"=>"nullable|exists:author,id",
+            "genre"=>"nullable|string"
         ];
     }
 }
