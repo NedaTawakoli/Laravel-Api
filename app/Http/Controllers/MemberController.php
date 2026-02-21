@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MemberInsertRequest;
+use App\Http\Requests\MemberUpdateRequest;
 use App\Http\Resources\MemberResource;
 use App\Models\member;
+use Exception;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
@@ -14,29 +17,17 @@ class MemberController extends Controller
     public function index()
     {
         //
-       $member = member::all();
-       return response()->json([
-        "member"=>$member,
-       ]);
+       $member = member::paginate(10);
+       return MemberResource::collection($member);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(MemberInsertRequest $request)
     {
         //
-       $member = member::create([
-       "name"=>$request->name,
-       "email"=>$request->email,
-       "address"=>$request->address,
-       "membership_date"=>$request->membership_date,
-       "whatsApp_number"=>$request->whatsApp_number,
-       "status"=>$request->status,
-        ]);
-        // return response()->json([
-        //     "member"=>$member,
-        // ]);
+       $member = member::create($request->validated());
         return new MemberResource($member);
     }
 
@@ -53,15 +44,16 @@ class MemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(MemberUpdateRequest $request, string $id)
     {
         //
        $member = member::findOrFail($id);
-       $member->update($request);
+       $member->update($request->validated());
        return response()->json([
         "member"=>$member,
        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -69,10 +61,15 @@ class MemberController extends Controller
     public function destroy(string $id)
     {
         //
+        try{
       $member = member::findOrFail($id);
       $member->delete();
       return response()->json([
-        "massage"=>"One item deleted",
-      ]);
+        "massage"=>$member->name. "deleted successussfully",
+     ]);}catch(Exception $error){
+        return response()->json([
+            "massage"=>"Something went wrong",
+        ]);
+      }
     }
 }
