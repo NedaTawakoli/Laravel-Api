@@ -18,12 +18,12 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
+            //$this->faker->randomElement([1,3])
             //
-            // Author::inRandomOrder()->first()?->id() ?? Author::factory()
             "title"=>$this->faker->sentence(3),
             "isbn"=>$this->faker->unique()->isbn13(),
             "description"=>$this->faker->paragraph(),
-            "author_id"=>$this->faker->randomElement([1,3]),
+            "author_id"=>Author::inRandomOrder()->first()->id ?? Author::factory(),
             "genre"=>$this->faker->randomElement(['fiction','motivational','non-fiction','Fantasy','Novel']),
             "published_at"=>$this->faker->date(),
             "total_copies"=>$this->faker->numberBetween(1,30),

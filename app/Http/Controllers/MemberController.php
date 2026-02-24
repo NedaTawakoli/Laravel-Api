@@ -14,10 +14,22 @@ class MemberController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-       $member = member::paginate(10);
+       $query = member::with('borrowing','activeBorrowing');
+       if($request->has('search')){
+        $searchTerm = $request->search;
+        $query->where(function($q)use($searchTerm){
+        $q->where('name','LIKE',"%{$searchTerm}%")
+        ->orWhere('email','LIKE',"%{$searchTerm}%")
+        ->orWhereHas('activeBorrowing',function($bookQuery)use($searchTerm){
+            $bookQuery->where('title','LIKE',"%{$searchTerm}%");
+        });
+        });
+       }
+      $member = $query->get();
+
        return MemberResource::collection($member);
     }
 

@@ -14,10 +14,21 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-      $book = Book::with('author')->paginate(10);
+      $query = Book::with('author');
+      if($request->has('search')){
+       $search = $request->search;
+       $query->where(function($q) use($search){
+        $q->where('title','LIKE',"%{$search}%")
+        ->orWhere('isbn','LIKE',"%{$search}%")
+        ->orWhereHas('author',function($authorQuery) use($search){
+            $authorQuery->where('name','LIKE',"%{$search}%");
+        });
+       });
+      }
+      $book = $query->paginate(10);
       return BookResource::collection($book);
     }
 
