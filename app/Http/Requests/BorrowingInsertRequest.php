@@ -23,9 +23,11 @@ class BorrowingInsertRequest extends FormRequest
     {
         return [
             //
-            "borrowed_date"=>"nullable|date",
-            "due_date"=>"nullable|date",
-            "returned_date"=>"nullable|date",
+            "borrowed_date"=>"required|date",
+            "due_date"=>"required|date",
+            // "returned_date"=>"nullable|date",
+            "book_id"=>"required|integer|exists:book,id",
+            "member_id"=>"required|integer|exists:member,id"
         ];
     }
 }

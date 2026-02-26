@@ -20,6 +20,11 @@ class MemberResource extends JsonResource
             "address"=>$this->address,
             "membership_date"=>$this->membership_date,
             "whatsApp_number"=>$this->whatsApp_number,
+            "status"=>$this->status,
+            "borrowing_count"=>$this->when(
+                $this->relationLoaded('activeBorrowing'),
+                $this->activeBorrowing()->count
+            ),
         ];
     }
 }
