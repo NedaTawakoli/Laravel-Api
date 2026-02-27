@@ -17,18 +17,14 @@ class BorrowingController extends Controller
     public function index(Request $request)
     {
         //
-       $borrowing = borrowing::with('book','member')->paginate(10);
+       $query = borrowing::with('book','member');
+       if($request->has('search')){
+       $search = $request->search;
+       $query->where('book_id','LIKE',"%{$search}%")
+       ->orWhere('member_id','LIKE',"%{$search}%");
+       }
+      $borrowing = $query->paginate(10);
        return BorrowingResource::collection($borrowing);
-    //    $query = borrowing::paginate(10);
-    //    if($request->has('search'){
-    //    $search = $request->search;
-    //   $query->where(function($q)use($search){
-    //   $q->where('due_date','LIKE',"%{$search}%")
-    //   ->orWhere('borrowed_date','LIKE',"%{$search}%")
-    //   ->orWhereHas('book',function());
-    //   });
-    //    });
-    //    return BorrowingResource::collection($borrowing);
     }
 
     /**
