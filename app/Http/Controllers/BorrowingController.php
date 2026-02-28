@@ -34,6 +34,7 @@ class BorrowingController extends Controller
     {
         //
       $borrowing = borrowing::create($request->validated());
+      $borrowing->load(['book','member']);
       return response()->json([
         "date"=>$borrowing,
       ]);
@@ -46,6 +47,7 @@ class BorrowingController extends Controller
     {
         //
        $borrow = borrowing::findOrFail($id);
+       $borrow->load(['book','member']);
        return new BorrowingResource($borrow);
     }
 

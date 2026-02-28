@@ -39,8 +39,14 @@ class MemberController extends Controller
     public function store(MemberInsertRequest $request)
     {
         //
+        try{
        $member = member::create($request->validated());
         return new MemberResource($member);
+        }catch(Exception $error){
+            return response()->json([
+                "error_massage"=>$error->getMessage();
+            ])
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MemberInsertRequest extends FormRequest
 {
@@ -23,7 +24,9 @@ class MemberInsertRequest extends FormRequest
     {
          return [
             "name"=>"required|string|min:3",
-            "email"=>"required|string|max:20",
+            "email"=>["required","string",
+            Rule::unique('members','email')->ignore($this->route('member'),'id')
+            ],
             "address"=>"required|string",
             "membership_date"=>"required|date",
             "whatsApp_number"=>"nullable|string",
