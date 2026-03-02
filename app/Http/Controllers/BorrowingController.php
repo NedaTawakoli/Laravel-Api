@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BorrowingInsertRequest;
 use App\Http\Requests\BorrowingUpdateRequest;
 use App\Http\Resources\BorrowingResource;
+use App\Models\Book;
 use App\Models\borrowing;
 use Exception;
 use Illuminate\Http\Request;
+use Symfony\Component\Mime\Message;
+
+use function Symfony\Component\Clock\now;
 
 class BorrowingController extends Controller
 {
@@ -33,11 +37,21 @@ class BorrowingController extends Controller
     public function store(BorrowingInsertRequest $request)
     {
         //
-      $borrowing = borrowing::create($request->validated());
-      $borrowing->load(['book','member']);
-      return response()->json([
-        "date"=>$borrowing,
-      ]);
+        try{
+       $book = Book::findOrFail($request->book_id);
+       if($book->available_copies>0){
+       $borrowing = borrowing::create($request->validated());
+        Book::update([
+             "available_copies"=>$book->available_copies--
+        ]);
+        $borrowing->load(['member','book']);
+        return new BorrowingResource($borrowing);
+       }
+       }catch(Exception $error){
+        return response()->json([
+            'message'=>$error->getMessage(),
+        ]);
+       }
     }
 
     /**
@@ -54,32 +68,16 @@ class BorrowingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(BorrowingUpdateRequest $request, string $id)
-    {
-        //
-       $borrow = borrowing::findOrFail($id);
-       $borrow->update($request->validated());
-       return response()->json([
-        "borrowing"=>$borrow,
-       ]);
+    public function returnBook(borrowing $borrow);
+    if($borrow !=="borrowed"){
+        return response()->json([
+            ""
+        ]);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-        try{
-       $borrow = borrowing::findOrFail($id);
-       $borrow->delete();
-       return response()->json([
-        "massage"=>"one item deleted",
-       ]);
-        }catch(Exception $error){
-            return response()->json([
-                "error"=>"something went wrong",
-            ]);
-        }
+    public function overDue(){
+       $overdueBorrowing = borrowing::with(['book','member'])
+       ->where('status','borrowed')->where('due_date','<',now())->get();
+       borrowing::where('status','borrowed')->where('due_date','<',now())->update(['status'=>'overdue']);
+       return borrowing::collection($overdueBorrowing);
     }
 }

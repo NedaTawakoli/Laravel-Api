@@ -8,6 +8,7 @@ use App\Http\Resources\MemberResource;
 use App\Models\member;
 use Exception;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class MemberController extends Controller
 {
@@ -44,8 +45,8 @@ class MemberController extends Controller
         return new MemberResource($member);
         }catch(Exception $error){
             return response()->json([
-                "error_massage"=>$error->getMessage();
-            ])
+                "error_massage"=>$error->getMessage(),
+            ]);
         }
     }
 
@@ -81,10 +82,18 @@ class MemberController extends Controller
         //
         try{
       $member = member::findOrFail($id);
-      $member->delete();
-      return response()->json([
-        "massage"=>$member->name. "deleted successussfully",
-     ]);}catch(Exception $error){
+     $member->load(['borrowing','activeBorrowing']);
+     if($member->activeBorrowing()->count()>0){
+     return response()->json([
+        "Message"=>"you cannot deleted".$member->name . "because he/she borrowed".$member->activeBorrowing()->count . " books"
+     ]);
+     }else{
+        $member->delete();
+        return response()->json([
+            "message"=>$member->name . "has been deleted successfully he/she can no longer use our facilities"
+        ]);
+     }
+     }catch(Exception $error){
         return response()->json([
             "massage"=>"Something went wrong",
         ]);

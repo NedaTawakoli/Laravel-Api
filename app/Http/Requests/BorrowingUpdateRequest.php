@@ -26,8 +26,8 @@ class BorrowingUpdateRequest extends FormRequest
             "borrowed_date"=>"nullable|date",
             "status"=>"required|string",
             "returned_date"=>"required|date",
-            "book_id"=>"nullable|integer",
-            "member_id"=>"nullable|integer"
+            "book_id"=>"nullable|integer|exists:books,id",
+            "member_id"=>"nullable|integer|exists:members,id"
         ];
     }
 }
