@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,7 @@ Route::apiResource('member',MemberController::class);
 Route::apiResource('borrowing',BorrowingController::class)->only('index','store','show');
 Route::post('borrowings/{borrowing}/return',[BorrowingController::class,'returnBook']);
 Route::get('borrowings/overdue/list',[BorrowingController::class,'overDue']);
+
+// authentivation routes
+Route::post('register',[UserController::class,'register']);
+Route::post('login',[UserController::class,'login']);
