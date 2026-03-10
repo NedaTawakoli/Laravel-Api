@@ -17,6 +17,9 @@ class BookController extends Controller
     public function index(Request $request)
     {
         //
+        if(!$request->user()->tokenCan('read','update')){
+            abort('303','you are not allowed');
+        }
       $query = Book::with('author');
       if($request->has('search')){
        $search = $request->search;
@@ -38,6 +41,11 @@ class BookController extends Controller
     public function store(BookInsertRequest $request)
     {
         //
+        if(!$request->user()->tokenCan('read','update')){
+            return response()->json([
+                abort('303','you are not allowed')
+            ]);
+        }
        $books =Book::create($request->validated());
        $books->load('author');
         return new BookResource($books);
@@ -46,7 +54,7 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(Request $request ,Book $book)
     {
         //
 
@@ -62,6 +70,9 @@ class BookController extends Controller
     //     }
     // end first way
     // second way
+    if(!$request->user()->tokenCan('read','update')){
+        abort('303','you are not allowed');
+    }
     $book->load('author');
     return new BookResource($book);
     // end second way
