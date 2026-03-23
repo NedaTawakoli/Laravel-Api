@@ -18,6 +18,7 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         //
+
        $query = member::with('borrowing','activeBorrowing');
        if($request->has('search')){
         $searchTerm = $request->search;

@@ -43,7 +43,7 @@ public function login(Request $request){
         "message"=>"email po password incorrect"
     ]);
    }
-   $token = $user->createToken('auth_token',['read','update'])->planeTextToken;
+   $token = $user->createToken('auth_token',['read','update','delete','insert'])->planeTextToken;
    return response()->json([
     "success"=>true,
     "user"=>new UserResource($user),

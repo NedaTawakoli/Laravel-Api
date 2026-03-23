@@ -17,7 +17,7 @@ class BookController extends Controller
     public function index(Request $request)
     {
         //
-        if(!$request->user()->tokenCan('read','update')){
+        if(!$request->user()->tokenCan('read')){
             abort('303','you are not allowed');
         }
       $query = Book::with('author');
@@ -41,7 +41,7 @@ class BookController extends Controller
     public function store(BookInsertRequest $request)
     {
         //
-        if(!$request->user()->tokenCan('read','update')){
+        if(!$request->user()->tokenCan('insert')){
             return response()->json([
                 abort('303','you are not allowed')
             ]);
@@ -70,7 +70,7 @@ class BookController extends Controller
     //     }
     // end first way
     // second way
-    if(!$request->user()->tokenCan('read','update')){
+    if(!$request->user()->tokenCan('read')){
         abort('303','you are not allowed');
     }
     $book->load('author');
@@ -84,6 +84,9 @@ class BookController extends Controller
     public function update(BooKUpdateRequest $request, Book $book)
     {
         //
+        if(!$request->user()->tokenCan('update')){
+            abort('303','you are not allowed');
+        }
         $book->update($request->validated());
        $book->load('author');
        return new BookResource($book);
@@ -92,7 +95,7 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request ,string $id)
     {
         //
     //   $book = Book::findOrFail($id);
@@ -101,6 +104,9 @@ class BookController extends Controller
     //     "massage"=>"One item Deleted",
     //   ]);
     try{
+        if(!$request->user()->tokenCan('delete')){
+            abort('303','you are not allowed');
+        }
      $book = Book::findOrFail($id);
      $book->delete();
      return response()->json([
