@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::table('students', function (Blueprint $table) {
             //
-            $table->enum("gender",["f","m"])->default("m");
-            $table->integer("Age");
+            $table->integer("score");
         });
     }
 
