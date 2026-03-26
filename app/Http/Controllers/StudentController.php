@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 class StudentController extends Controller
 {
     //
@@ -52,5 +51,36 @@ class StudentController extends Controller
       $student->score = 90;
       $student->save();
       return "Date added successfully";
+    }
+    public function fetchStudent1(){
+       $student = Student::all();
+        return $student;
+    }
+    public function shart(){
+    //  $student = Student::where("score",">",50)->orderByDesc("score")->get();
+    //  $student = Student::where("score",">",50)->where(function($q){
+    //   $q->where("Age",">",15)->orWhere("Age","<",50);
+    //  })->get();
+    // $student = Student::whereIn("id",[3,5])->get();
+    // $student = Student::whereBetween("score",[30,50])->get();
+    // $student = Student::whereNotBetween("score",[30,50])->get();
+   $student = Student::where("name","LIKE","%AI%")->orWhere("name","LIKE","%ab%")->get();
+        return $student;
+    }
+    public function query(){
+       $student = Student::male()->get();
+       return $student;
+    }
+    public function delete1(){
+     Student::findOrFail(4)->delete();
+      return "one item deleted";
+    }
+    public function showDeleted(){
+       $student = Student::onlyTrashed();
+       return $student;
+    }
+    public function restoreData(){
+        Student::withTrashed()->findOrFail(2)->restore();
+        return "one item restored";
     }
 }
