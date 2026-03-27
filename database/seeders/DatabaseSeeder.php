@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         //  Book::factory(40)->create();
         //  Student::factory(20)->create();
-        Student::factory(50)->create();
+        Student::factory(60)->create();
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',

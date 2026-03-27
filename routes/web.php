@@ -30,4 +30,9 @@ Route::get("query",[StudentController::class,"query"]);
 Route::get("delete",[StudentController::class,"delete1"]);
 Route::get("showDeleted",[StudentController::class,"showDeleted"]);
 Route::get("restoreData",[StudentController::class,"restoreData"]);
-Route::view("home","Student.home");
+Route::prefix("student")->controller(StudentController::class)->group(function(){
+    Route::get("/","partVeiw");
+    Route::view("/add","Student.add");
+    Route::get("/create","create");
+
+});

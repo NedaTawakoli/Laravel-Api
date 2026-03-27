@@ -83,4 +83,26 @@ class StudentController extends Controller
         Student::withTrashed()->findOrFail(2)->restore();
         return "one item restored";
     }
+    public function partVeiw(Request $request){
+       $student = Student::when($request->search,function($query) use($request){
+        $query->whereAny([
+            "name",
+            "lastName",
+            "gender",
+            "Age",
+            "score"
+        ],'LIKE','%'.$request->search.'%');
+       })->paginate(15);
+       return  view("Student.home",compact("student"));
+    }
+    public function create(Request $request){
+    $student = new Student();
+    $student->name = $request->name;
+    $student->lastName = $request->lastName;
+    $student->Age = $request->age;
+    $student->score = $request->score;
+    $student->gender = $request->gender;
+    $student->save();
+    return redirect("student");
+    }
 }
