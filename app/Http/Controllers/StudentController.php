@@ -105,4 +105,9 @@ class StudentController extends Controller
     $student->save();
     return redirect("student");
     }
+    public function updated($id){
+       $student = Student::findOrFail($id);
+        return  view("Student.update",compact("student"));
+
+    }
 }

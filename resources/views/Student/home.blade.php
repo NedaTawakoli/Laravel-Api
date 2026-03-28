@@ -52,6 +52,8 @@
             <th style="border: 1px solid;background-image:linear-gradient(60deg,rgb(211, 205, 205),rgb(247, 243, 243),rgb(235, 224, 224));color:purple; padding:15px 10px;">Gender</th>
             <th style="border: 1px solid;background-image:linear-gradient(60deg,rgb(211, 205, 205),rgb(247, 243, 243),rgb(235, 224, 224));color:purple; padding:15px 10px;">Age</th>
             <th style="border: 1px solid;background-image:linear-gradient(60deg,rgb(211, 205, 205),rgb(247, 243, 243),rgb(235, 224, 224));color:purple; padding:15px 10px;">Score</th>
+            <th style="border: 1px solid;background-image:linear-gradient(60deg,rgb(211, 205, 205),rgb(247, 243, 243),rgb(235, 224, 224));color:purple; padding:15px 10px;">Update</th>
+            <th style="border: 1px solid;background-image:linear-gradient(60deg,rgb(211, 205, 205),rgb(247, 243, 243),rgb(235, 224, 224));color:purple; padding:15px 10px;">Delete</th>
             {{-- <th style="border: 1px solid;background-image:linear-gradient(60deg,rgb(211, 205, 205),rgb(247, 243, 243),rgb(235, 224, 224));color:purple; padding:15px 10px;">Data-Of_birth</th> --}}
         </tr>
         @foreach ($student as $st)
@@ -62,6 +64,8 @@
         <td style="border: 1px solid;padding:5px 10px; color:white;text-align:center">{{ $st->gender }}</td>
         <td style="border: 1px solid;padding:5px 10px; color:white;text-align:center">{{ $st->Age }}</td>
         <td style="border: 1px solid;padding:5px 10px; color:white;text-align:center">{{ $st->score }}</td>
+        <td style="border: 1px solid;padding:5px 10px; color:white;text-align:center"><a href=" { URL('student/update/'.{{ $st->id }})}" > Update</a></td>
+        <td style="border: 1px solid;padding:5px 10px; color:white;text-align:center"><a href="">Delete</a></td>
         {{-- <td style="border: 1px solid;padding:5px 10px; color:white">{{ $st->Date-of-bir }}</td> --}}
         </tr>
         @endforeach

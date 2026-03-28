@@ -33,6 +33,8 @@ Route::get("restoreData",[StudentController::class,"restoreData"]);
 Route::prefix("student")->controller(StudentController::class)->group(function(){
     Route::get("/","partVeiw");
     Route::view("/add","Student.add");
-    Route::get("/create","create");
+    Route::post("/create","create");
+    Route::get("update/{id}",'updated');
+    // Route::view("update","Student.update");
 
 });
